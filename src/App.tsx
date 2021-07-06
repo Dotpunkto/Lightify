@@ -24,7 +24,7 @@ const Form = () => {
       <div className="Hello">
         <SelectDirectory updatePath={updatePath} />
         <SelectResolution updateResolution={updateResolution} />
-        <ResizeImage />
+        <ResizeImage path={path} resolution={resolution} />
       </div>
     </div>
   );

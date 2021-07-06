@@ -14,5 +14,10 @@
     "postinstall": "yarn electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "@types/sharp": "^0.28.3",
+    "glob": "^7.1.7",
+    "sharp": "^0.28.3",
+    "vips": "^1.0.0"
+  }
 }
