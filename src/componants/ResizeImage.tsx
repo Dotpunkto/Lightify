@@ -6,6 +6,7 @@ import '../App.global.css';
 
 const sharp = require('sharp');
 const glob = require('glob');
+const mkdirp = require('mkdirp');
 
 const ResizeImage = (props: {
   path: string;
@@ -22,15 +23,20 @@ const ResizeImage = (props: {
     return `${name}(copie).${extention}`;
   };
 
+  const createDirectory = () => {
+    mkdirp.sync(`${props.path}/Resize`);
+  };
+
   const resize = async (fileName: string) => {
     const fileNameCopie = makeFileNameCopie(fileName);
     const resol = props.resolution.split('x');
     const h = parseInt(resol[0], 10);
     const w = parseInt(resol[1], 10);
+    createDirectory();
 
     await sharp(`${props.path}/${fileName}`)
       .resize(h, w)
-      .toFile(`${props.path}/${fileNameCopie}`);
+      .toFile(`${props.path}/Resize/${fileNameCopie}`);
   };
 
   const resizeAndGreyscale = async (fileName: string) => {
@@ -38,11 +44,12 @@ const ResizeImage = (props: {
     const resol = props.resolution.split('x');
     const h = parseInt(resol[0], 10);
     const w = parseInt(resol[1], 10);
+    const dest = createDirectory();
 
     await sharp(`${props.path}/${fileName}`)
       .resize(h, w)
       .greyscale()
-      .toFile(`${props.path}/${fileNameCopie}`);
+      .toFile(`${dest}/${fileNameCopie}`);
   };
 
   const makeToast = (content: string, type: AppearanceTypes) => {
