@@ -1,6 +1,7 @@
 /* eslint-disable import/no-duplicates */
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { ToastProvider } from 'react-toast-notifications';
 import './App.global.css';
 import SelectDirectory from './componants/OpenDirectory';
 import SelectResolution from './componants/SelectResolution';
@@ -8,7 +9,7 @@ import ResizeImage from './componants/ResizeImage';
 
 const Form = () => {
   const [path, setPath] = useState<string>('');
-  const [resolution, setResolution] = useState<string>('720');
+  const [resolution, setResolution] = useState<string>('720x480');
 
   const updatePath = (value: string) => {
     setPath(value);
@@ -24,7 +25,9 @@ const Form = () => {
       <div className="Hello">
         <SelectDirectory updatePath={updatePath} />
         <SelectResolution updateResolution={updateResolution} />
-        <ResizeImage path={path} resolution={resolution} />
+        <ToastProvider>
+          <ResizeImage path={path} resolution={resolution} />
+        </ToastProvider>
       </div>
     </div>
   );
