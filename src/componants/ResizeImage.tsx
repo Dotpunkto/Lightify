@@ -7,7 +7,11 @@ import '../App.global.css';
 const sharp = require('sharp');
 const glob = require('glob');
 
-const ResizeImage = (props: { path: string; resolution: string }) => {
+const ResizeImage = (props: {
+  path: string;
+  resolution: string;
+  greyscale: boolean;
+}) => {
   const { addToast } = useToasts();
 
   const makeFileNameCopie = (fileName: string) => {
@@ -24,10 +28,20 @@ const ResizeImage = (props: { path: string; resolution: string }) => {
     const h = parseInt(resol[0], 10);
     const w = parseInt(resol[1], 10);
 
-    await sharp(`${props.path}/${fileName}`, {
-      withoutEnlargement: false,
-    })
+    await sharp(`${props.path}/${fileName}`)
       .resize(h, w)
+      .toFile(`${props.path}/${fileNameCopie}`);
+  };
+
+  const resizeAndGreyscale = async (fileName: string) => {
+    const fileNameCopie = makeFileNameCopie(fileName);
+    const resol = props.resolution.split('x');
+    const h = parseInt(resol[0], 10);
+    const w = parseInt(resol[1], 10);
+
+    await sharp(`${props.path}/${fileName}`)
+      .resize(h, w)
+      .greyscale()
       .toFile(`${props.path}/${fileNameCopie}`);
   };
 
@@ -46,7 +60,11 @@ const ResizeImage = (props: { path: string; resolution: string }) => {
     } else {
       res.forEach(function (item) {
         const test = item.split('/');
-        resize(test.lastItem);
+        if (props.greyscale === true) {
+          resizeAndGreyscale(test.lastItem);
+        } else {
+          resize(test.lastItem);
+        }
       });
       makeToast('Action completed', 'success');
     }
