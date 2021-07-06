@@ -252,6 +252,7 @@
     "electron-updater": "^4.3.4",
     "history": "^5.0.0",
     "react": "^17.0.1",
+    "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-toast-notifications": "^2.5.0",

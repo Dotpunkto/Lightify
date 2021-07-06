@@ -1,6 +1,7 @@
 /* eslint-disable promise/always-return */
 import React from 'react';
-import { useToasts } from 'react-toast-notifications';
+import { AppearanceTypes, useToasts } from 'react-toast-notifications';
+import { confirmAlert } from 'react-confirm-alert';
 import '../App.global.css';
 
 const sharp = require('sharp');
@@ -30,30 +31,53 @@ const ResizeImage = (props: { path: string; resolution: string }) => {
       .toFile(`${props.path}/${fileNameCopie}`);
   };
 
-  const manageResize = () => {
-    if (props.path === '') {
-      addToast('Select a directory', {
-        appearance: 'error',
-        autoDismiss: true,
-      });
+  const makeToast = (content: string, type: AppearanceTypes) => {
+    addToast(content, {
+      appearance: type,
+      autoDismiss: true,
+    });
+  };
+
+  const makeResize = () => {
+    const res = glob.sync(`${props.path}/*.@(png|jpg|jpeg)`);
+
+    if (res.length === 0) {
+      makeToast('The directory does not contain a valid image', 'info');
     } else {
-      const res = glob.sync(`${props.path}/*.@(png|jpg|jpeg)`);
-
-      if (res.lenght === 0) {
-        addToast('The directory does not contain a valid image', {
-          appearance: 'error',
-          autoDismiss: true,
-        });
-      }
-
       res.forEach(function (item) {
         const test = item.split('/');
         resize(test.lastItem);
       });
-      addToast('Action completed', {
-        appearance: 'success',
-        autoDismiss: true,
-      });
+      makeToast('Action completed', 'success');
+    }
+  };
+
+  const displayConfirmMessage = () => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            makeResize();
+          },
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            return false;
+          },
+        },
+      ],
+    });
+  };
+
+  const manageResize = () => {
+    if (props.path === '') {
+      makeToast('Select a directory', 'error');
+    } else {
+      displayConfirmMessage();
     }
   };
 
